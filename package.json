@@ -1,0 +1,40 @@
+{
+  "name": "ai-codebase-explainer",
+  "private": true,
+  "workspaces": [
+    "backend/shared",
+    "backend/api-gateway",
+    "backend/services/*",
+    "backend/workers",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "docker-compose -f docker-compose.yml up --build",
+    "dev:backend": "concurrently -n gateway,auth,repo,parser,graph,search,ai,workers \"cd backend/api-gateway && npm run dev\" \"cd backend/services/auth-service && npm run dev\" \"cd backend/services/repo-service && npm run dev\" \"cd backend/services/parser-service && npm run dev\" \"cd backend/services/graph-service && npm run dev\" \"cd backend/services/search-service && npm run dev\" \"cd backend/services/ai-service && npm run dev\" \"cd backend/workers && npm run dev\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:build": "docker-compose build",
+    "docker:clean": "docker-compose down -v --remove-orphans",
+    "infra:up": "docker-compose up -d postgres redis neo4j qdrant typesense minio",
+    "migrate": "npm run migrate --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "@types/pg": "^8.18.0",
+    "concurrently": "^8.2.2",
+    "dotenv-cli": "^11.0.0",
+    "glob": "^13.0.6",
+    "pg": "^8.20.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
